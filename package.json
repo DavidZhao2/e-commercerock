@@ -1,0 +1,27 @@
+{
+  "name": "e-commercerock",
+  "version": "1.0.0",
+  "description": "We are building an online platform to sell custom rocks with unique designs and textures. Users can browse, register, and purchase products.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidZhao2/e-commercerock.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DavidZhao2/e-commercerock/issues"
+  },
+  "homepage": "https://github.com/DavidZhao2/e-commercerock#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  }
+}
