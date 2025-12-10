@@ -1,14 +1,77 @@
-<section class="category-page">
-  <h1>welcome, {{user.name}}!</h1>
+<section class="profile-page">
+  <header class="profile-header">
+    <div>
+      <p class="profile-eyebrow">Account Dashboard</p>
+      <h1>Hi, {{user.name}} 👋</h1>
+      <p class="profile-subtitle">
+        Welcome back to RockBay. Here you’ll find your account info,
+        saved rocks, and recent activity.
+      </p>
+    </div>
 
-  <p class="category-description">
-    this is your profile page. in the full project this will show your saved rocks,
-    recent orders, and account info. for now, it proves that login and registration
-    are working with the database.
-  </p>
+    <div class="profile-badge">
+      <span class="badge-label">Member id</span>
+      <span class="badge-value">#{{user.id}}</span>
+    </div>
+  </header>
 
-  <div class="coming-soon">
-    <p><strong>email:</strong> {{user.email}}</p>
-    <p><strong>user id:</strong> {{user.id}}</p>
+  <div class="profile-grid">
+    <section class="card profile-card">
+      <h2>Account Details</h2>
+      <p class="profile-label">Email</p>
+      <p class="profile-value">{{user.email}}</p>
+
+      <div class="profile-divider"></div>
+
+      <p class="profile-label">Name</p>
+      <p class="profile-value">{{user.name}}</p>
+
+      <div class="profile-divider"></div>
+
+      <p class="profile-label">Status</p>
+      <p class="profile-value">Crystal Explorer</p>
+
+      <a href="/logout" class="btn-ghost">Logout</a>
+    </section>
+
+    <section class="profile-side">
+      <div class="profile-stats">
+        <div class="stat-pill">
+          <span class="stat-label">Saved rocks</span>
+          <span class="stat-value">0</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-label">Orders</span>
+          <span class="stat-value">0</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-label">Wishlist Items</span>
+          <span class="stat-value">0</span>
+        </div>
+      </div>
+
+      <section class="card profile-card">
+        <h2>Recent Activity</h2>
+        <p class="profile-muted">
+          wip (add activity thing)
+        </p>
+        <ul class="activity-list">
+          <li>u made a acc woo</li>
+          <li></li>
+        </ul>
+      </section>
+
+      <section class="card profile-card">
+        <h2>Order History</h2>
+        <p class="profile-muted">
+          imagine this area showing:
+        </p>
+        <ul class="profile-list">
+          <li>rock 1</li>
+          <li>rock 2</li>
+          <li>rock 3</li>
+        </ul>
+      </section>
+    </section>
   </div>
 </section>

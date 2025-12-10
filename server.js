@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const exphbs = require('express-handlebars');
+const session = require('express-session');
 const db = require('./db/db');
 
 const app = express();
@@ -23,6 +24,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 // form body parser
 app.use(express.urlencoded({ extended: true }));
 
+// session setup
+app.use(
+  session({
+    secret: 'rockbay-secret-key',
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+// make user available in templates
+app.use((req, res, next) => {
+  res.locals.currentUser = req.session.user || null;
+  next();
+});
+
 // home page
 app.get('/', (req, res) => {
   res.render('home', {
@@ -30,21 +46,99 @@ app.get('/', (req, res) => {
   });
 });
 
+// optional /home route
 app.get('/home', (req, res) => {
   res.render('home', {
     title: 'RockBay – Natural Crystals & Rocks',
   });
 });
 
+// shop redirect to home (shop content is on home)
+app.get('/shop', (req, res) => {
+  res.redirect('/');
+});
+
+// product pages
+
+app.get('/products/quartz', (req, res) => {
+  res.render('product', {
+    title: 'Quartz – RockBay',
+    product: {
+      name: 'Quartz Point',
+      price: 22,
+      category: 'healing crystal',
+      size: '5–7 cm point',
+      description:
+        'clear quartz point for clarity, focus, and amplifying intentions.',
+      properties: 'clarity • focus • energy amplifier',
+    },
+  });
+});
+
+app.get('/products/jade', (req, res) => {
+  res.render('product', {
+    title: 'Jade – RockBay',
+    product: {
+      name: 'Jade Palm Stone',
+      price: 30,
+      category: 'healing crystal',
+      size: '4–5 cm palm stone',
+      description:
+        'smooth green jade palm stone for balance, luck, and gentle protection.',
+      properties: 'luck • balance • emotional calm',
+    },
+  });
+});
+
+app.get('/products/citrine', (req, res) => {
+  res.render('product', {
+    title: 'Citrine – RockBay',
+    product: {
+      name: 'Citrine Cluster',
+      price: 27,
+      category: 'healing crystal',
+      size: 'small desk-size cluster',
+      description:
+        'bright citrine cluster associated with abundance, joy, and confidence.',
+      properties: 'abundance • confidence • optimism',
+    },
+  });
+});
+
+app.get('/products/tigereye', (req, res) => {
+  res.render('product', {
+    title: 'Tiger Eye – RockBay',
+    product: {
+      name: 'Tiger Eye Tumble Set',
+      price: 19,
+      category: 'tumbled stones',
+      size: 'set of 4–5 tumbles',
+      description:
+        'grounding tiger eye stones for courage, focus, and protection.',
+      properties: 'protection • focus • grounding',
+    },
+  });
+});
 
 // auth pages
+
 app.get('/login', (req, res) => {
+  // if already logged in, go to profile
+  if (req.session.user) {
+    return res.redirect('/profile');
+  }
+
   res.render('login', {
     title: 'Login – RockBay',
   });
 });
 
 app.get('/register', (req, res) => {
+  // if already logged in, go to profile
+  if (req.session.user) {
+    return res.redirect('/profile');
+  }
+
   res.render('register', {
     title: 'Register – RockBay',
   });
@@ -57,7 +151,7 @@ app.post('/register', (req, res) => {
   if (!name || !email || !password) {
     return res.render('register', {
       title: 'Register – RockBay',
-      error: 'Please fill out all fields.',
+      error: 'please fill out all fields.',
       name,
       email,
     });
@@ -66,9 +160,9 @@ app.post('/register', (req, res) => {
   const sql = 'INSERT INTO users (name, email, password) VALUES (?, ?, ?)';
   db.run(sql, [name, email, password], function (err) {
     if (err) {
-      let msg = 'Something went wrong. Please try again.';
+      let msg = 'something went wrong. please try again.';
       if (err.code === 'SQLITE_CONSTRAINT') {
-        msg = 'An account with that email already exists.';
+        msg = 'an account with that email already exists.';
       }
 
       return res.render('register', {
@@ -81,7 +175,7 @@ app.post('/register', (req, res) => {
 
     res.render('login', {
       title: 'Login – RockBay',
-      success: 'Account created successfully. Please log in.',
+      success: 'account created successfully. please log in.',
       email,
     });
   });
@@ -94,7 +188,7 @@ app.post('/login', (req, res) => {
   if (!email || !password) {
     return res.render('login', {
       title: 'Login – RockBay',
-      error: 'Please enter both email and password.',
+      error: 'please enter both email and password.',
       email,
     });
   }
@@ -105,7 +199,7 @@ app.post('/login', (req, res) => {
       console.error(err);
       return res.render('login', {
         title: 'Login – RockBay',
-        error: 'Unexpected error. Please try again.',
+        error: 'unexpected error. please try again.',
         email,
       });
     }
@@ -113,15 +207,38 @@ app.post('/login', (req, res) => {
     if (!user || user.password !== password) {
       return res.render('login', {
         title: 'Login – RockBay',
-        error: 'Invalid email or password.',
+        error: 'invalid email or password.',
         email,
       });
     }
 
-    res.render('profile', {
-      title: 'Profile – RockBay',
-      user,
-    });
+    // save user in session
+    req.session.user = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    };
+
+    res.redirect('/profile');
+  });
+});
+
+// profile page (requires login)
+app.get('/profile', (req, res) => {
+  if (!req.session.user) {
+    return res.redirect('/login');
+  }
+
+  res.render('profile', {
+    title: 'Profile – RockBay',
+    user: req.session.user,
+  });
+});
+
+// logout
+app.get('/logout', (req, res) => {
+  req.session.destroy(() => {
+    res.redirect('/');
   });
 });
 
@@ -130,7 +247,7 @@ app.get('/crystals', (req, res) => {
   res.render('category', {
     title: 'Crystals – RockBay',
     heading: 'Crystals',
-    description: 'Healing crystals, points, clusters, and tumbled stones.',
+    description: 'healing crystals, points, clusters, and tumbled stones.',
   });
 });
 
@@ -138,7 +255,7 @@ app.get('/raw-stones', (req, res) => {
   res.render('category', {
     title: 'Raw Stones – RockBay',
     heading: 'Raw Stones & Chunks',
-    description: 'Unpolished, natural stone chunks for collectors.',
+    description: 'unpolished, natural stone chunks for collectors.',
   });
 });
 
@@ -146,7 +263,7 @@ app.get('/minerals', (req, res) => {
   res.render('category', {
     title: 'Minerals – RockBay',
     heading: 'Minerals & Specimens',
-    description: 'Display specimens and rare mineral formations.',
+    description: 'display specimens and rare mineral formations.',
   });
 });
 
@@ -154,7 +271,7 @@ app.get('/fossils', (req, res) => {
   res.render('category', {
     title: 'Fossils – RockBay',
     heading: 'Fossils & Petrified',
-    description: 'Fossil pieces and petrified wood.',
+    description: 'fossil pieces and petrified wood.',
   });
 });
 
@@ -162,16 +279,17 @@ app.get('/bundles', (req, res) => {
   res.render('category', {
     title: 'Bundles – RockBay',
     heading: 'Crystal Bundles',
-    description: 'Curated bundles for themes like protection or calm.',
+    description: 'curated bundles for themes like protection or calm.',
   });
 });
 
 app.get('/account', (req, res) => {
-  res.render('category', {
-    title: 'Account – RockBay',
-    heading: 'Account',
-    description: 'Login, order history, and saved wish lists will go here.',
-  });
+  // simple redirect to profile for now
+  if (req.session.user) {
+    return res.redirect('/profile');
+  }
+
+  res.redirect('/login');
 });
 
 // server start

@@ -1,6 +1,6 @@
 <section class="auth-layout">
   <section class="card auth-card">
-    <h2>login</h2>
+    <h2>Login</h2>
 
     {{#if error}}
       <p class="form-error">{{error}}</p>
@@ -12,7 +12,7 @@
 
     <form method="POST" action="/login">
       <label>
-        email
+        Email
         <input
           type="email"
           name="email"
@@ -23,7 +23,7 @@
       </label>
 
       <label>
-        password
+        Password
         <input
           type="password"
           name="password"
@@ -32,15 +32,15 @@
         />
       </label>
 
-      <button type="submit">login</button>
+      <button type="submit">Login</button>
     </form>
   </section>
 
   <section class="card auth-card">
-    <h2>new here?</h2>
-    <p>create an account to browse, customize, and purchase our rocks.</p>
+    <h2>New here?</h2>
+    <p>Create an account to browse, customize, and purchase our rocks.</p>
     <a href="/register">
-      <button type="button">register</button>
+      <button type="button">Register</button>
     </a>
   </section>
 </section>

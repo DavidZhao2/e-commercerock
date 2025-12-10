@@ -1,0 +1,28 @@
+<section class="hero">
+  <div class="hero-image-placeholder">
+    {{product.name}} image
+  </div>
+
+  <div class="hero-text">
+    <h1>{{product.name}}</h1>
+    <p>{{product.description}}</p>
+
+    <p class="price" style="margin-top: 0.75rem; font-size: 1.1rem;">
+      ${{product.price}}
+    </p>
+
+    <button class="btn-primary" style="margin-top: 1rem;">
+      add to cart
+    </button>
+  </div>
+</section>
+
+<section class="featured">
+  <h2 class="section-title">details</h2>
+
+  <div class="coming-soon">
+    <p><strong>category:</strong> {{product.category}}</p>
+    <p><strong>size:</strong> {{product.size}}</p>
+    <p><strong>properties:</strong> {{product.properties}}</p>
+  </div>
+</section>
