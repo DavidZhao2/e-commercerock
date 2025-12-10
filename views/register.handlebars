@@ -1,6 +1,6 @@
 <section class="auth-layout">
   <section class="card auth-card">
-    <h2>create an account</h2>
+    <h2>Create an account</h2>
 
     {{#if error}}
       <p class="form-error">{{error}}</p>
@@ -8,18 +8,18 @@
 
     <form method="POST" action="/register">
       <label>
-        name
+        Name
         <input
-          type="text"
-          name="name"
-          placeholder="your name"
+          type="Text"
+          name="Name"
+          placeholder="Your name"
           value="{{name}}"
           required
         />
       </label>
 
       <label>
-        email
+        Email
         <input
           type="email"
           name="email"
@@ -30,7 +30,7 @@
       </label>
 
       <label>
-        password
+        Password
         <input
           type="password"
           name="password"
@@ -39,12 +39,12 @@
         />
       </label>
 
-      <button type="submit">register</button>
+      <button type="submit">Register</button>
     </form>
 
     <p style="margin-top: 0.75rem; font-size: 0.85rem;">
-      already have an account?
-      <a href="/login">log in</a>
+      Already have an account?
+      <a href="/login">Log in</a>
     </p>
   </section>
 </section>
