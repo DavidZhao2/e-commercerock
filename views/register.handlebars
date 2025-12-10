@@ -1,16 +1,23 @@
 <section class="auth-layout">
   <section class="card auth-card">
-    <h2>login</h2>
+    <h2>create an account</h2>
 
     {{#if error}}
       <p class="form-error">{{error}}</p>
     {{/if}}
 
-    {{#if success}}
-      <p class="form-success">{{success}}</p>
-    {{/if}}
+    <form method="POST" action="/register">
+      <label>
+        name
+        <input
+          type="text"
+          name="name"
+          placeholder="your name"
+          value="{{name}}"
+          required
+        />
+      </label>
 
-    <form method="POST" action="/login">
       <label>
         email
         <input
@@ -32,15 +39,12 @@
         />
       </label>
 
-      <button type="submit">login</button>
+      <button type="submit">register</button>
     </form>
-  </section>
 
-  <section class="card auth-card">
-    <h2>new here?</h2>
-    <p>create an account to browse, customize, and purchase our rocks.</p>
-    <a href="/register">
-      <button type="button">register</button>
-    </a>
+    <p style="margin-top: 0.75rem; font-size: 0.85rem;">
+      already have an account?
+      <a href="/login">log in</a>
+    </p>
   </section>
 </section>

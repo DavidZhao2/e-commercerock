@@ -13,6 +13,26 @@ body {
   flex-direction: column;
 }
 
+.promo-banner {
+  margin-bottom: 2.5rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid #1f2937;
+  background: radial-gradient(circle at top, #22c55e22 0, #020617 70%);
+  text-align: center;
+}
+
+.promo-banner h2 {
+  font-size: 1.2rem;
+  margin-bottom: 0.4rem;
+}
+
+.promo-banner p {
+  color: #e5e7eb;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+}
+
 .site-header {
   border-bottom: 1px solid #1f2937;
   padding: 1rem 2rem;
@@ -229,6 +249,24 @@ input {
 
 input::placeholder {
   color: #6b7280;
+}
+
+.form-error {
+  background-color: #7f1d1d;
+  color: #fecaca;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.form-success {
+  background-color: #064e3b;
+  color: #bbf7d0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
 }
 
 button {
