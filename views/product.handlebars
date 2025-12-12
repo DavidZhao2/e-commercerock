@@ -1,28 +1,55 @@
-<section class="hero">
-  <div class="hero-image-placeholder">
-    {{product.name}} image
+<main class="page-main product-page">
+  <div class="product-layout">
+    <!-- left side: image -->
+    <section class="product-media">
+      <div class="product-image-frame">
+        <img
+          src="/images/{{product.slug}}.jpg"
+          alt="{{product.name}} crystal"
+        />
+      </div>
+    </section>
+
+    <!-- right side: main info -->
+    <section class="product-main">
+      <p class="product-tag">{{product.category}}</p>
+
+      <h1 class="product-title">{{product.name}}</h1>
+
+      <p class="product-description">
+        {{product.description}}
+      </p>
+
+      <div class="product-price-row">
+        <span class="product-price">${{product.price}}</span>
+        <span class="product-badge">In stock</span>
+      </div>
+
+      <button type="button" class="btn-primary product-add-btn">
+        Add to cart
+      </button>
+    </section>
   </div>
 
-  <div class="hero-text">
-    <h1>{{product.name}}</h1>
-    <p>{{product.description}}</p>
+  <!-- details card -->
+  <section class="product-details-card">
+    <h2 class="section-title">Details</h2>
 
-    <p class="price" style="margin-top: 0.75rem; font-size: 1.1rem;">
-      ${{product.price}}
-    </p>
+    <dl class="product-details-list">
+      <div class="product-detail-row">
+        <dt>Category</dt>
+        <dd>{{product.category}}</dd>
+      </div>
 
-    <button class="btn-primary" style="margin-top: 1rem;">
-      add to cart
-    </button>
-  </div>
-</section>
+      <div class="product-detail-row">
+        <dt>Size</dt>
+        <dd>{{product.size}}</dd>
+      </div>
 
-<section class="featured">
-  <h2 class="section-title">details</h2>
-
-  <div class="coming-soon">
-    <p><strong>category:</strong> {{product.category}}</p>
-    <p><strong>size:</strong> {{product.size}}</p>
-    <p><strong>properties:</strong> {{product.properties}}</p>
-  </div>
-</section>
+      <div class="product-detail-row">
+        <dt>Properties</dt>
+        <dd>{{product.properties}}</dd>
+      </div>
+    </dl>
+  </section>
+</main>

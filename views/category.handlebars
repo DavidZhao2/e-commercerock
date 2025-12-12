@@ -1,8 +1,40 @@
-<section class="category-page">
-  <h1>{{heading}}</h1>
-  <p class="category-description">{{description}}</p>
+<main class="page-main category-page">
+  <header class="category-header">
+    <h1>{{heading}}</h1>
+    <p class="category-description">{{description}}</p>
+  </header>
 
-  <div class="coming-soon">
-    <p>Product listings for this category will appear here soon.</p>
-  </div>
-</section>
+  {{#if products}}
+    <section class="category-grid">
+      {{#each products}}
+        <article class="category-card">
+          <div class="category-card-image-wrap">
+            <img
+              src="/images/{{slug}}.jpg"
+              alt="{{name}} crystal"
+              class="category-card-image"
+            />
+          </div>
+
+          <div class="category-card-body">
+            <h2 class="category-card-title">{{name}}</h2>
+            <p class="category-card-price">${{price}}</p>
+          </div>
+
+          <a href="/products/{{slug}}" class="small-btn category-card-btn">
+            View Details
+          </a>
+        </article>
+      {{/each}}
+    </section>
+  {{else}}
+    <section class="category-empty">
+      <div class="category-empty-card">
+        <p>
+          Products for this category are coming soon. Check back soon or
+          explore other sections.
+        </p>
+      </div>
+    </section>
+  {{/if}}
+</main>

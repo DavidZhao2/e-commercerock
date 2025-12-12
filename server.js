@@ -58,65 +58,428 @@ app.get('/shop', (req, res) => {
   res.redirect('/');
 });
 
-// product pages
-
-app.get('/products/quartz', (req, res) => {
-  res.render('product', {
+const products = {
+  quartz: {
+    slug: 'quartz',
     title: 'Quartz – RockBay',
-    product: {
-      name: 'Quartz Point',
-      price: 22,
-      category: 'healing crystal',
-      size: '5–7 cm point',
-      description:
-        'clear quartz point for clarity, focus, and amplifying intentions.',
-      properties: 'clarity • focus • energy amplifier',
-    },
-  });
-});
-
-app.get('/products/jade', (req, res) => {
-  res.render('product', {
+    name: 'Quartz Point',
+    price: 22,
+    category: 'Healing Crystal',
+    type: 'crystals',            
+    size: '5–7 cm point',
+    description:
+      'Clear quartz point for clarity, focus, and amplifying intentions.',
+    properties: 'Clarity • Focus • Energy Amplifier',
+  },
+  jade: {
+    slug: 'jade',
     title: 'Jade – RockBay',
-    product: {
-      name: 'Jade Palm Stone',
-      price: 30,
-      category: 'healing crystal',
-      size: '4–5 cm palm stone',
-      description:
-        'smooth green jade palm stone for balance, luck, and gentle protection.',
-      properties: 'luck • balance • emotional calm',
-    },
-  });
-});
-
-app.get('/products/citrine', (req, res) => {
-  res.render('product', {
+    name: 'Jade Palm Stone',
+    price: 30,
+    category: 'Healing Crystal',
+    type: 'crystals',         
+    size: '4–5 cm palm stone',
+    description:
+      'Smooth green jade palm stone for balance, luck, and gentle protection.',
+    properties: 'Luck • Balance • Emotional Calm',
+  },
+  citrine: {
+    slug: 'citrine',
     title: 'Citrine – RockBay',
-    product: {
-      name: 'Citrine Cluster',
-      price: 27,
-      category: 'healing crystal',
-      size: 'small desk-size cluster',
-      description:
-        'bright citrine cluster associated with abundance, joy, and confidence.',
-      properties: 'abundance • confidence • optimism',
-    },
+    name: 'Citrine Cluster',
+    price: 27,
+    category: 'Healing Crystal',
+    type: 'crystals',          
+    size: 'Small desk-size cluster',
+    description:
+      'Bright citrine cluster associated with abundance, joy, and confidence.',
+    properties: 'Abundance • Confidence • Optimism',
+  },
+  tigereye: {
+    slug: 'tigereye',
+    title: 'Tiger Eye – RockBay',
+    name: 'Tiger Eye Tumble Set',
+    price: 19,
+    category: 'Tumbled Stones',
+    type: 'crystals',           
+    size: 'Set of 4–5 tumbles',
+    description:
+      'Grounding tiger eye stones for courage, focus, and protection.',
+    properties: 'Protection • Focus • Grounding',
+  },
+  amethyst: {
+    slug: 'amethyst',
+    title: 'Amethyst – RockBay',
+    name: 'Amethyst Cluster',
+    price: 25,
+    category: 'Crystals',
+    type: 'crystals',
+    size: 'Medium cluster',
+    description:
+      'Deep violet amethyst cluster ideal for meditation, calm, and protection. Each piece is hand-selected.',
+    properties: 'Calm • Protection • Intuition',
+  },
+  'rose-quartz-heart': {
+    slug: 'rose-quartz-heart',
+    title: 'Rose Quartz – RockBay',
+    name: 'Rose Quartz Heart',
+    price: 24,
+    category: 'Crystals',
+    type: 'crystals',
+    size: 'Polished heart',
+    description:
+      'Soft pink rose quartz heart that supports self-love, compassion, and emotional healing.',
+    properties: 'Self-Love • Compassion • Emotional Healing',
+  },
+  'black-obsidian-tumble': {
+    slug: 'black-obsidian-tumble',
+    title: 'Black Obsidian – RockBay',
+    name: 'Black Obsidian Tumble',
+    price: 18,
+    category: 'Crystals',
+    type: 'minerals',           
+    size: 'Set of small tumbles',
+    description:
+      'Tumbled black obsidian stones that help with grounding, protection, and clearing negative energy.',
+    properties: 'Protection • Grounding • Energy Clearing',
+  },
+  'selenite-wand': {
+    slug: 'selenite-wand',
+    title: 'Selenite – RockBay',
+    name: 'Selenite Wand',
+    price: 16,
+    category: 'Crystals',
+    type: 'minerals',         
+    size: 'Smooth wand',
+    description:
+      'Smooth selenite wand used to cleanse energy, charge other crystals, and clear auras.',
+    properties: 'Cleansing • Charging • Aura Clearing',
+  },
+    'ammonite-slice': {
+    slug: 'ammonite-slice',
+    title: 'Ammonite Slice – RockBay',
+    name: 'Ammonite Slice',
+    price: 38,
+    category: 'Fossil',
+    type: 'fossils',
+    size: '6–8 cm polished slice',
+    description:
+      'Polished ammonite slice showing beautiful spiral chambers and natural mineral patterns.',
+    properties: 'Ancient energy • Transformation • Earth history',
+  },
+
+  'trilobite-plate': {
+    slug: 'trilobite-plate',
+    title: 'Trilobite Plate – RockBay',
+    name: 'Trilobite Plate',
+    price: 45,
+    category: 'Fossil',
+    type: 'fossils',
+    size: 'Small matrix plate',
+    description:
+      'Fossilized trilobite preserved in stone matrix, perfect for desks or shelves.',
+    properties: 'Ancient oceans • Evolution • Study piece',
+  },
+
+  'orthoceras-tower': {
+    slug: 'orthoceras-tower',
+    title: 'Orthoceras Tower – RockBay',
+    name: 'Orthoceras Tower',
+    price: 34,
+    category: 'Fossil',
+    type: 'fossils',
+    size: '10–14 cm carved tower',
+    description:
+      'Standing tower carved from orthoceras fossil, showing multiple shell imprints.',
+    properties: 'Grounding • Focus • Ancient sea life',
+  },
+
+  'megalodon-tooth': {
+    slug: 'megalodon-tooth',
+    title: 'Megalodon Tooth – RockBay',
+    name: 'Megalodon Tooth',
+    price: 89,
+    category: 'Fossil',
+    type: 'fossils',
+    size: 'Replica display tooth',
+    description:
+      'Large megalodon tooth replica with detailed serrations, ready to display.',
+    properties: 'Strength • Power • Ocean legend',
+  },
+
+  'petrified-wood-slab': {
+    slug: 'petrified-wood-slab',
+    title: 'Petrified Wood Slab – RockBay',
+    name: 'Petrified Wood Slab',
+    price: 52,
+    category: 'Fossil',
+    type: 'fossils',
+    size: 'Flat polished slice',
+    description:
+      'Polished slice of petrified wood showing rings and mineral colors.',
+    properties: 'Stability • Patience • Earth connection',
+  },
+    'fluorite-tower': {
+    slug: 'fluorite-tower',
+    title: 'Fluorite Tower – RockBay',
+    name: 'Fluorite Tower',
+    price: 32,
+    category: 'Mineral',
+    type: 'minerals',
+    size: '8–10 cm standing tower',
+    description:
+      'Banding of purple and green fluorite carved into a standing tower for desks or altars.',
+    properties: 'Focus • Clarity • Mental balance',
+  },
+
+  'labradorite-palm': {
+    slug: 'labradorite-palm',
+    title: 'Labradorite Palm Stone – RockBay',
+    name: 'Labradorite Palm Stone',
+    price: 29,
+    category: 'Mineral',
+    type: 'minerals',
+    size: '4–5 cm palm stone',
+    description:
+      'Shimmering labradorite palm stone with blue and gold flash when turned in the light.',
+    properties: 'Protection • Intuition • Magic',
+  },
+
+  'pyrite-cube': {
+    slug: 'pyrite-cube',
+    title: 'Pyrite Cube – RockBay',
+    name: 'Pyrite Cube',
+    price: 26,
+    category: 'Mineral',
+    type: 'minerals',
+    size: 'Natural cubic formation',
+    description:
+      'Metallic pyrite cube specimen, sometimes called “fool’s gold,” perfect for shelves or grids.',
+    properties: 'Confidence • Willpower • Abundance',
+  },
+
+  'hematite-tumble-set': {
+    slug: 'hematite-tumble-set',
+    title: 'Hematite Tumble Set – RockBay',
+    name: 'Hematite Tumble Set',
+    price: 18,
+    category: 'Mineral',
+    type: 'minerals',
+    size: 'Set of 4–5 tumbles',
+    description:
+      'Smooth, weighty hematite tumbles that are great for grounding and stress relief.',
+    properties: 'Grounding • Protection • Stability',
+  },
+
+  'malachite-slice': {
+    slug: 'malachite-slice',
+    title: 'Malachite Slice – RockBay',
+    name: 'Malachite Slice',
+    price: 41,
+    category: 'Mineral',
+    type: 'minerals',
+    size: 'Polished slice or freeform',
+    description:
+      'Rich green malachite slice showing natural banding and rings, ideal for display.',
+    properties: 'Transformation • Protection • Heart energy',
+  },
+
+  'smoky-quartz-point': {
+    slug: 'smoky-quartz-point',
+    title: 'Smoky Quartz Point – RockBay',
+    name: 'Smoky Quartz Point',
+    price: 28,
+    category: 'Mineral',
+    type: 'minerals',
+    size: '6–8 cm point',
+    description:
+      'Smoky quartz point with gentle brown tones, often used for grounding and protection.',
+    properties: 'Grounding • Protection • Energy filter',
+  },
+    'raw-quartz-cluster': {
+    slug: 'raw-quartz-cluster',
+    title: 'Raw Quartz Cluster – RockBay',
+    name: 'Raw Quartz Cluster',
+    price: 24,
+    category: 'Raw Stone',
+    type: 'raw-stones',
+    size: 'Hand-sized cluster',
+    description:
+      'Natural clear quartz cluster with multiple points growing from a shared base.',
+    properties: 'Clarity • Amplification • Energy focus',
+  },
+
+  'raw-rose-quartz-chunk': {
+    slug: 'raw-rose-quartz-chunk',
+    title: 'Raw Rose Quartz Chunk – RockBay',
+    name: 'Raw Rose Quartz Chunk',
+    price: 20,
+    category: 'Raw Stone',
+    type: 'raw-stones',
+    size: 'Medium rough piece',
+    description:
+      'Unpolished rose quartz with soft pink tones, perfect for bowls or altar corners.',
+    properties: 'Self-love • Compassion • Gentle heart energy',
+  },
+
+  'raw-black-tourmaline': {
+    slug: 'raw-black-tourmaline',
+    title: 'Raw Black Tourmaline – RockBay',
+    name: 'Raw Black Tourmaline',
+    price: 22,
+    category: 'Raw Stone',
+    type: 'raw-stones',
+    size: 'Chunky rod formation',
+    description:
+      'Rough black tourmaline rod with natural striations, often used for protection and grounding.',
+    properties: 'Protection • Grounding • Energy shield',
+  },
+
+  'raw-calcite-honey': {
+    slug: 'raw-calcite-honey',
+    title: 'Raw Honey Calcite – RockBay',
+    name: 'Raw Honey Calcite',
+    price: 19,
+    category: 'Raw Stone',
+    type: 'raw-stones',
+    size: 'Small to medium pieces',
+    description:
+      'Translucent honey calcite chunks with warm golden tones and natural faces.',
+    properties: 'Confidence • Motivation • Solar energy',
+  },
+
+  'raw-amazonite-piece': {
+    slug: 'raw-amazonite-piece',
+    title: 'Raw Amazonite – RockBay',
+    name: 'Raw Amazonite Piece',
+    price: 21,
+    category: 'Raw Stone',
+    type: 'raw-stones',
+    size: 'Palm-sized rough piece',
+    description:
+      'Blue-green amazonite in raw form, showing natural color and matrix.',
+    properties: 'Calm communication • Balance • Soothing energy',
+  },
+    'winter-calm-bundle': {
+    slug: 'winter-calm-bundle',
+    title: 'Winter Calm Bundle – RockBay',
+    name: 'Winter Calm Crystal Bundle',
+    price: 54,
+    category: 'Crystal Bundle',
+    type: 'bundles',
+    size: 'Set of 4–5 stones',
+    description:
+      'A cozy winter set with amethyst, rose quartz, and selenite picks for calm nights and stress relief.',
+    properties: 'Calm • Stress relief • Soft heart energy',
+  },
+
+  'protection-starter-set': {
+    slug: 'protection-starter-set',
+    title: 'Protection Starter Set – RockBay',
+    name: 'Protection Starter Set',
+    price: 49,
+    category: 'Crystal Bundle',
+    type: 'bundles',
+    size: 'Small kit in pouch',
+    description:
+      'Beginner-friendly kit with black tourmaline, obsidian, and selenite pieces for daily protection.',
+    properties: 'Protection • Grounding • Energy shield',
+  },
+
+  'abundance-desk-bundle': {
+    slug: 'abundance-desk-bundle',
+    title: 'Abundance Desk Bundle – RockBay',
+    name: 'Abundance Desk Bundle',
+    price: 59,
+    category: 'Crystal Bundle',
+    type: 'bundles',
+    size: 'Desk-size trio',
+    description:
+      'Citrine, pyrite, and green aventurine style bundle designed to sit on your desk for focus and abundance.',
+    properties: 'Abundance • Confidence • Work focus',
+  },
+
+  'fossil-discovery-pack': {
+    slug: 'fossil-discovery-pack',
+    title: 'Fossil Discovery Pack – RockBay',
+    name: 'Fossil Discovery Pack',
+    price: 62,
+    category: 'Fossil Bundle',
+    type: 'bundles',
+    size: 'Mixed small fossils',
+    description:
+      'Mixed pack of small ammonite, orthoceras, and trilobite pieces, great for gifts or classrooms.',
+    properties: 'Earth history • Curiosity • Learning',
+  },
+};
+
+function getProductsByType(type) {
+  return Object.values(products).filter((p) => p.type === type);
+}
+
+// product pages (dynamic)
+app.get('/products/:slug', (req, res) => {
+  const slug = req.params.slug;
+  const product = products[slug];
+
+  if (!product) {
+    // simple 404-style page
+    return res.status(404).render('category', {
+      title: 'Product Not Found – RockBay',
+      heading: 'Product Not Found',
+      description: 'This crystal is not available or may have been removed.',
+    });
+  }
+
+  res.render('product', {
+    title: product.title,
+    product,
   });
 });
 
-app.get('/products/tigereye', (req, res) => {
-  res.render('product', {
-    title: 'Tiger Eye – RockBay',
-    product: {
-      name: 'Tiger Eye Tumble Set',
-      price: 19,
-      category: 'tumbled stones',
-      size: 'set of 4–5 tumbles',
-      description:
-        'grounding tiger eye stones for courage, focus, and protection.',
-      properties: 'protection • focus • grounding',
-    },
+// category pages
+app.get('/crystals', (req, res) => {
+  res.render('category', {
+    title: 'Crystals – RockBay',
+    heading: 'Crystals',
+    description: 'Healing crystals, points, clusters, and tumbled stones.',
+    products: getProductsByType('crystals'),
+  });
+});
+
+app.get('/raw-stones', (req, res) => {
+  res.render('category', {
+    title: 'Raw Stones – RockBay',
+    heading: 'Raw Stones',
+    description: 'Unpolished, natural stone chunks and raw pieces.',
+    products: getProductsByType('raw-stones'),
+  });
+});
+
+app.get('/minerals', (req, res) => {
+  res.render('category', {
+    title: 'Minerals – RockBay',
+    heading: 'Minerals & Specimens',
+    description: 'Display pieces, mineral specimens, and unique finds.',
+    products: getProductsByType('minerals'),
+  });
+});
+
+app.get('/fossils', (req, res) => {
+  res.render('category', {
+    title: 'Fossils – RockBay',
+    heading: 'Fossils',
+    description: 'Ancient fossils and petrified wood.',
+    products: getProductsByType('fossils'),
+  });
+});
+
+app.get('/bundles', (req, res) => {
+  res.render('category', {
+    title: 'Bundles – RockBay',
+    heading: 'Crystal Bundles',
+    description: 'Curated bundles for calm, protection, abundance, and fossil lovers.',
+    products: getProductsByType('bundles'),  
   });
 });
 
@@ -239,47 +602,6 @@ app.get('/profile', (req, res) => {
 app.get('/logout', (req, res) => {
   req.session.destroy(() => {
     res.redirect('/');
-  });
-});
-
-// category pages
-app.get('/crystals', (req, res) => {
-  res.render('category', {
-    title: 'Crystals – RockBay',
-    heading: 'Crystals',
-    description: 'healing crystals, points, clusters, and tumbled stones.',
-  });
-});
-
-app.get('/raw-stones', (req, res) => {
-  res.render('category', {
-    title: 'Raw Stones – RockBay',
-    heading: 'Raw Stones & Chunks',
-    description: 'unpolished, natural stone chunks for collectors.',
-  });
-});
-
-app.get('/minerals', (req, res) => {
-  res.render('category', {
-    title: 'Minerals – RockBay',
-    heading: 'Minerals & Specimens',
-    description: 'display specimens and rare mineral formations.',
-  });
-});
-
-app.get('/fossils', (req, res) => {
-  res.render('category', {
-    title: 'Fossils – RockBay',
-    heading: 'Fossils & Petrified',
-    description: 'fossil pieces and petrified wood.',
-  });
-});
-
-app.get('/bundles', (req, res) => {
-  res.render('category', {
-    title: 'Bundles – RockBay',
-    heading: 'Crystal Bundles',
-    description: 'curated bundles for themes like protection or calm.',
   });
 });
 
