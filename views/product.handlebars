@@ -25,9 +25,13 @@
         <span class="product-badge">In stock</span>
       </div>
 
-      <button type="button" class="btn-primary product-add-btn">
-        Add to cart
-      </button>
+      <form method="POST" action="/cart/add">
+        <input type="hidden" name="slug" value="{{product.slug}}" />
+        <input type="hidden" name="quantity" value="1" />
+        <button type="submit" class="btn-primary product-add-btn">
+          Add to cart
+        </button>
+      </form>
     </section>
   </div>
 

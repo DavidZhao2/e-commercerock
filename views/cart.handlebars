@@ -1,0 +1,77 @@
+<main class="page-main cart-page">
+    <header class="cart-header">
+    <h1>Shopping Cart</h1>
+    {{#if items}}
+        <p class="cart-subtitle">
+        You have {{items.length}} items in your cart.
+        </p>
+    {{else}}
+        <p class="cart-subtitle">
+        Your cart is empty right now.
+        </p>
+    {{/if}}
+</header>
+
+
+  {{#if items}}
+    <section class="cart-layout">
+      <section class="cart-items">
+        {{#each items}}
+          <article class="cart-item-card">
+            <div class="cart-item-main">
+              <div class="cart-item-image">
+                <img src="/images/{{slug}}.jpg" alt="{{name}}" />
+              </div>
+
+              <div class="cart-item-info">
+                <h2 class="cart-item-title">{{name}}</h2>
+                <p class="cart-item-price">${{price}}</p>
+                <p class="cart-item-quantity">
+                  Quantity: <span>{{quantity}}</span>
+                </p>
+              </div>
+            </div>
+
+            <div class="cart-item-side">
+              <p class="cart-item-line-total">
+                Line total: ${{lineTotal}}
+              </p>
+
+              <form method="POST" action="/cart/remove">
+                <input type="hidden" name="slug" value="{{slug}}" />
+                <button type="submit" class="cart-remove-btn">
+                  Remove
+                </button>
+              </form>
+            </div>
+          </article>
+        {{/each}}
+      </section>
+
+      <aside class="cart-summary">
+        <h2>Order Summary</h2>
+        <div class="cart-summary-row">
+          <span>Subtotal</span>
+          <span>${{subtotal}}</span>
+        </div>
+
+        <p class="cart-summary-note">
+          Taxes and shipping are not calculated here.
+        </p>
+
+        <button type="button" class="btn-primary cart-checkout-btn" disabled>
+          Checkout
+        </button>
+      </aside>
+    </section>
+  {{else}}
+    <section class="cart-empty">
+      <div class="cart-empty-card">
+        <p>Looks like you have no items yet.</p>
+        <a href="/crystals" class="btn-primary cart-empty-btn">
+          Browse Crystals
+        </a>
+      </div>
+    </section>
+  {{/if}}
+</main>

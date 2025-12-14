@@ -33,10 +33,100 @@ app.use(
   })
 );
 
-// make user available in templates
+// make user and cart info available in templates
 app.use((req, res, next) => {
   res.locals.currentUser = req.session.user || null;
+
+  // Initialize cart in session if it doesn't exist
+  if (!req.session.cart) {
+    req.session.cart = {};
+  }
+
+  // Compute cart item count for header
+  const cartCount = Object.values(req.session.cart).reduce(
+    (sum, qty) => sum + qty,
+    0
+  );
+  res.locals.cartCount = cartCount;
+
   next();
+});
+
+// add to cart
+app.post('/cart/add', (req, res) => {
+  const { slug, quantity } = req.body;
+
+  const product = products[slug];
+  if (!product) {
+    return res.status(400).send('Invalid product');
+  }
+
+  const qty = parseInt(quantity || '1', 10);
+  if (Number.isNaN(qty) || qty <= 0) {
+    return res.redirect(`/products/${slug}`);
+  }
+
+  if (!req.session.cart) {
+    req.session.cart = {};
+  }
+
+  if (!req.session.cart[slug]) {
+    req.session.cart[slug] = 0;
+  }
+
+  req.session.cart[slug] += qty;
+
+  // if logged in, save cart to DB
+  if (req.session.user && req.session.user.id) {
+    saveCartForUser(req.session.user.id, req.session.cart);
+  }
+
+  res.redirect('/cart');
+});
+
+// view cart
+app.get('/cart', (req, res) => {
+  const cart = req.session.cart || {};
+
+  const items = Object.entries(cart)
+    .map(([slug, qty]) => {
+      const product = products[slug];
+      if (!product) {
+        return null;
+      }
+      const lineTotal = product.price * qty;
+      return {
+        slug,
+        name: product.name,
+        price: product.price,
+        quantity: qty,
+        lineTotal,
+      };
+    })
+    .filter(Boolean);
+
+  const subtotal = items.reduce((sum, item) => sum + item.lineTotal, 0);
+
+  res.render('cart', {
+    title: 'Shopping Cart – RockBay',
+    items,
+    subtotal,
+  });
+});
+
+app.post('/cart/remove', (req, res) => {
+  const { slug } = req.body;
+
+  if (req.session.cart && req.session.cart[slug]) {
+    delete req.session.cart[slug];
+  }
+
+  // if logged in, save updated cart
+  if (req.session.user && req.session.user.id) {
+    saveCartForUser(req.session.user.id, req.session.cart);
+  }
+
+  res.redirect('/cart');
 });
 
 // home page
@@ -413,6 +503,21 @@ const products = {
   },
 };
 
+function saveCartForUser(userId, cart) {
+  if (!userId) return;
+  const cartJson = JSON.stringify(cart || {});
+
+  db.run(
+    'UPDATE users SET cart_json = ? WHERE id = ?',
+    [cartJson, userId],
+    (err) => {
+      if (err) {
+        console.error('Failed to save cart for user', userId, err);
+      }
+    }
+  );
+}
+
 function getProductsByType(type) {
   return Object.values(products).filter((p) => p.type === type);
 }
@@ -581,6 +686,23 @@ app.post('/login', (req, res) => {
       name: user.name,
       email: user.email,
     };
+
+    // load saved cart if it exists
+    let savedCart = {};
+    if (user.cart_json) {
+      try {
+        savedCart = JSON.parse(user.cart_json);
+      } catch (e) {
+        console.error('Failed to parse saved cart JSON for user', user.id, e);
+      }
+    }
+
+    // merge guest cart (if any) with saved cart
+    const guestCart = req.session.cart || {};
+    // saved cart wins if there is overlap
+    const mergedCart = { ...guestCart, ...savedCart };
+
+    req.session.cart = mergedCart;
 
     res.redirect('/profile');
   });
