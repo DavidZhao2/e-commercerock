@@ -1165,6 +1165,59 @@ a:hover {
   }
 }
 
+/* Info / FAQ layout */
+.info-page .info-header h1 {
+  font-size: 1.7rem;
+  margin-bottom: 0.3rem;
+}
+
+.info-subtitle {
+  color: #9ca3af;
+  font-size: 0.9rem;
+  max-width: 36rem;
+}
+
+/* Card wrapper */
+.info-card {
+  margin-top: 1.5rem;
+  border-radius: 0.9rem;
+  border: 1px dashed #4b5563;
+  padding: 1.5rem 1.75rem;
+  background-color: #020617;
+}
+
+/* FAQ-specific styling */
+.faq-card h2 {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.faq-list {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.faq-item dt {
+  font-weight: 600;
+  font-size: 0.98rem;
+  margin-bottom: 0.15rem;
+}
+
+.faq-item dd {
+  margin: 0;
+  color: #d1d5db;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+/* Slightly tighter on mobile */
+@media (max-width: 768px) {
+  .info-card {
+    padding: 1.25rem 1.25rem;
+  }
+}
 
 
 
