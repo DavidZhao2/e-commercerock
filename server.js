@@ -506,6 +506,44 @@ app.get('/shop', (req, res) => {
   res.redirect('/');
 });
 
+// info pages
+app.get('/about-rocks', (req, res) => {
+  res.render('about-rocks', {
+    title: 'About Rocks – RockBay',
+  });
+});
+
+app.get('/shipping', (req, res) => {
+  res.render('shipping', {
+    title: 'Shipping – RockBay',
+  });
+});
+
+app.get('/crystal-guide', (req, res) => {
+  res.render('crystal-guide', {
+    title: 'Crystal Guide – RockBay',
+  });
+});
+
+app.get('/faq', (req, res) => {
+  res.render('faq', {
+    title: 'FAQ – RockBay',
+  });
+});
+
+app.get('/contact', (req, res) => {
+  res.render('contact', {
+    title: 'Contact – RockBay',
+  });
+});
+
+app.get('/social-media', (req, res) => {
+  res.render('social-media', {
+    title: 'Social Media – RockBay',
+  });
+});
+
+
 /* ---------------------- PRODUCT & CATEGORY ROUTES ---------------------- */
 
 // product detail

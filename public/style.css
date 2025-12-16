@@ -687,7 +687,7 @@ button:hover {
   flex-direction: column;
   align-items: center;
   gap: 0.75rem;
-  min-height: 320px; /* keeps cards roughly same height */
+  min-height: 320px; 
 }
 
 /* image frame with fixed aspect ratio */
@@ -998,6 +998,171 @@ button:hover {
 .checkout-success-btn {
   margin-top: 1rem;
   display: inline-block;
+}
+
+a {
+  color: #e5e7eb;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #e5e7eb;  
+}
+
+a:hover {
+  color: #f9fafb;
+  text-decoration: underline;
+}
+
+.info-page .coming-soon {
+  border-radius: 0.75rem;
+  border: 1px dashed #4b5563;
+  padding: 1.5rem 1.75rem;
+  background-color: #020617;
+}
+
+.info-list {
+  list-style: disc;
+  padding-left: 1.25rem;
+  font-size: 0.9rem;
+  color: #e5e7eb;
+}
+
+.info-list li + li {
+  margin-top: 0.25rem;
+}
+
+.info-disclaimer {
+  margin-top: 1.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed #1f2937;
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+/* Small phone layout – e.g. iPhone XR (414px wide) */
+@media (max-width: 480px) {
+  body {
+    font-size: 15px;
+  }
+
+  /* Header + nav */
+  .site-header {
+    padding: 0.75rem 1rem;
+  }
+
+  .top-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .logo {
+    font-size: 1.3rem;
+  }
+
+  .main-nav {
+    font-size: 0.8rem;
+    gap: 0.4rem;
+    padding-bottom: 0.35rem;
+    overflow-x: auto;
+  }
+
+  .main-nav a {
+    padding: 0.25rem 0.7rem;
+  }
+
+  /* Global page padding */
+  .page-main,
+  .product-page,
+  .profile-page,
+  .cart-page,
+  .info-page {
+    padding-inline: 1rem;
+    padding-top: 1.5rem;
+  }
+
+  /* Hero section on home */
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .hero-image {
+    min-height: 180px;
+  }
+
+  /* Home + category grids */
+  .featured-grid,
+  .category-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem;
+  }
+
+  .rock-card,
+  .category-card {
+    padding: 0.9rem;
+  }
+
+  /* Product page */
+  .product-layout {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+
+  .product-add-btn {
+    max-width: 100%;
+  }
+
+  .product-details-card {
+    padding-inline: 1.25rem;
+  }
+
+  /* Cart page */
+  .cart-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .cart-item-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cart-item-main {
+    width: 100%;
+    margin-bottom: 0.75rem;
+  }
+
+  .cart-item-side {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .cart-summary {
+    margin-top: 0;
+  }
+
+  /* Footer centered on mobile */
+  .site-footer {
+    text-align: center;
+  }
+
+  .footer-links {
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+@media (max-width: 360px) {
+  .featured-grid,
+  .category-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 
