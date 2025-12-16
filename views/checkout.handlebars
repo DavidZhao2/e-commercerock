@@ -1,0 +1,118 @@
+<main class="page-main checkout-page">
+  <div class="checkout-header">
+    <h1>Checkout</h1>
+    <p class="checkout-subtitle">
+      Review your order and enter your shipping details to complete your purchase.
+    </p>
+  </div>
+
+  {{#if errors}}
+    <div class="form-error">
+      {{#each errors}}
+        <div>{{this}}</div>
+      {{/each}}
+    </div>
+  {{/if}}
+
+  <div class="checkout-layout">
+    <!-- left: form -->
+    <section class="checkout-form card">
+      <h2>Shipping details</h2>
+
+      <form action="/checkout" method="post">
+        <label>
+          Full name
+          <input
+            type="text"
+            name="fullName"
+            value="{{form.fullName}}{{#unless form.fullName}}{{#if user}}{{user.name}}{{/if}}{{/unless}}"
+            required
+          />
+        </label>
+
+        <label>
+          Email
+          <input
+            type="email"
+            name="email"
+            value="{{form.email}}{{#unless form.email}}{{#if user}}{{user.email}}{{/if}}{{/unless}}"
+            required
+          />
+        </label>
+
+        <label>
+          Address
+          <input
+            type="text"
+            name="address"
+            value="{{form.address}}"
+            placeholder="Street address"
+            required
+          />
+        </label>
+
+        <label>
+          City
+          <input
+            type="text"
+            name="city"
+            value="{{form.city}}"
+            required
+          />
+        </label>
+
+        <label>
+          Postal / ZIP code
+          <input
+            type="text"
+            name="postalCode"
+            value="{{form.postalCode}}"
+            required
+          />
+        </label>
+
+        <button type="submit">Place order</button>
+      </form>
+    </section>
+
+    <!-- right: summary -->
+    <aside class="checkout-summary card">
+      <h2>Order summary</h2>
+
+      <ul class="checkout-items">
+        {{#each cart}}
+          <li class="checkout-item">
+            <div>
+              <div class="checkout-item-name">{{this.name}}</div>
+              <div class="checkout-item-meta">
+                {{this.quantity}} × ${{this.price}}
+              </div>
+            </div>
+            <div class="checkout-item-total">
+              ${{multiply this.price this.quantity}}
+            </div>
+          </li>
+        {{/each}}
+      </ul>
+
+      <div class="checkout-totals">
+        <div class="checkout-row">
+          <span>Subtotal</span>
+          <span>${{subtotal}}</span>
+        </div>
+        <div class="checkout-row checkout-row-muted">
+          <span>Shipping</span>
+          <span>Free</span>
+        </div>
+        <div class="checkout-row checkout-row-total">
+          <span>Total</span>
+          <span>${{subtotal}}</span>
+        </div>
+      </div>
+
+      <p class="checkout-note">
+        no real payments are processed.
+      </p>
+    </aside>
+  </div>
+</main>
