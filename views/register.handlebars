@@ -1,50 +1,51 @@
-<section class="auth-layout">
-  <section class="card auth-card">
-    <h2>Create an account</h2>
+<main class="page-main">
+  <section class="auth-layout">
+    <article class="card">
+      <h2>Create an account</h2>
 
-    {{#if error}}
-      <p class="form-error">{{error}}</p>
-    {{/if}}
+      {{#if error}}
+        <div class="form-error">
+          {{error}}
+        </div>
+      {{/if}}
 
-    <form method="POST" action="/register">
-      <label>
-        Name
-        <input
-          type="Text"
-          name="Name"
-          placeholder="Your name"
-          value="{{name}}"
-          required
-        />
-      </label>
+      <form method="POST" action="/register">
+        <label>
+          Name
+          <input
+            type="text"
+            name="name"        
+            placeholder="Your name"
+            value="{{name}}"
+            required
+          />
+        </label>
 
-      <label>
-        Email
-        <input
-          type="email"
-          name="email"
-          placeholder="you@example.com"
-          value="{{email}}"
-          required
-        />
-      </label>
+        <label>
+          Email
+          <input
+            type="email"
+            name="email"        
+            placeholder="you@example.com"
+            value="{{email}}"
+            required
+          />
+        </label>
 
-      <label>
-        Password
-        <input
-          type="password"
-          name="password"
-          placeholder="********"
-          required
-        />
-      </label>
+        <label>
+          Password
+          <input
+            type="password"
+            name="password"      
+            placeholder="Enter a password"
+            required
+          />
+        </label>
 
-      <button type="submit">Register</button>
-    </form>
-
-    <p style="margin-top: 0.75rem; font-size: 0.85rem;">
-      Already have an account?
-      <a href="/login">Log in</a>
-    </p>
+        <button type="submit">
+          Create account
+        </button>
+      </form>
+    </article>
   </section>
-</section>
+</main>

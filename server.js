@@ -574,6 +574,33 @@ app.get('/bundles', (req, res) => {
   });
 });
 
+function buildCartSnapshot(req) {
+  const cart = req.session.cart || {}; // { slug: quantity }
+
+  const items = Object.entries(cart)
+    .map(([slug, qty]) => {
+      const product = products[slug];
+      if (!product) return null;
+
+      const quantity = Number(qty) || 0;
+      const lineTotal = quantity * product.price;
+
+      return {
+        slug,
+        name: product.name,
+        price: product.price,
+        quantity,
+        lineTotal,
+      };
+    })
+    .filter(Boolean);
+
+  const subtotal = items.reduce((sum, item) => sum + item.lineTotal, 0);
+  const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+
+  return { items, subtotal, itemCount };
+}
+
 /* ---------------------- CART ROUTES ---------------------- */
 
 // add to cart
@@ -606,8 +633,7 @@ app.post('/cart/add', (req, res) => {
 
 // view cart
 app.get('/cart', (req, res) => {
-  const cartObj = getCartObject(req);
-  const { items, subtotal, itemCount } = getCartTotals(cartObj);
+  const { items, subtotal, itemCount } = buildCartSnapshot(req);
 
   res.render('cart', {
     title: 'Shopping Cart – RockBay',
@@ -637,8 +663,7 @@ app.post('/cart/remove', (req, res) => {
 
 // checkout page
 app.get('/checkout', (req, res) => {
-  const cartObj = getCartObject(req);
-  const { items, subtotal, itemCount } = getCartTotals(cartObj);
+  const { items, subtotal, itemCount } = buildCartSnapshot(req);
 
   if (!itemCount) {
     return res.redirect('/cart');
@@ -655,8 +680,7 @@ app.get('/checkout', (req, res) => {
 
 // checkout submit
 app.post('/checkout', (req, res) => {
-  const cartObj = getCartObject(req);
-  const { items, subtotal, itemCount } = getCartTotals(cartObj);
+  const { items, subtotal, itemCount } = buildCartSnapshot(req);
 
   if (!itemCount) {
     return res.redirect('/cart');
@@ -683,19 +707,40 @@ app.post('/checkout', (req, res) => {
     });
   }
 
-  const orderNumber = Math.floor(100000 + Math.random() * 900000);
+  const userId = req.session.user ? req.session.user.id : null;
 
-  // clear cart
-  req.session.cart = {};
-  if (req.session.user && req.session.user.id) {
-    saveCartForUser(req.session.user.id, req.session.cart);
-  }
+  // Insert into orders; SQLite will auto-increment the id
+  db.run(
+    'INSERT INTO orders (user_id, subtotal) VALUES (?, ?)',
+    [userId, subtotal],
+    function (err) {
+      if (err) {
+        console.error('Failed to create order:', err);
+        return res.render('checkout', {
+          title: 'Checkout – RockBay',
+          items,
+          subtotal,
+          itemCount,
+          user: req.session.user || null,
+          errors: ['Something went wrong placing your order. Please try again.'],
+          form: { fullName, email, address, city, postalCode },
+        });
+      }
 
-  res.render('checkout-success', {
-    title: 'Order placed – RockBay',
-    orderNumber,
-    subtotal,
-  });
+      // This is your incrementing order number
+      const orderNumber = this.lastID;
+
+      // Clear the cart after "order"
+      req.session.cart = {};
+      res.locals.cartCount = 0;
+
+      res.render('checkout-success', {
+        title: 'Order placed – RockBay',
+        orderNumber,
+        subtotal,
+      });
+    }
+  );
 });
 
 /* ---------------------- AUTH ROUTES ---------------------- */
